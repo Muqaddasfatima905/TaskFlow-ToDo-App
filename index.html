@@ -1,0 +1,287 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A clean and professional task management dashboard.">
+    <title>TaskFlow | Smart To-Do List</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<script src="script.js"></script>
+<body>
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">✓</div>
+            <span>TaskFlow</span>
+        </div>
+
+        <p class="sidebar-heading">WORKSPACE</p>
+
+        <nav class="navigation">
+            <button class="nav-item active" data-page="dashboard">
+                <span class="nav-icon">▦</span>
+                <span>Dashboard</span>
+            </button>
+
+            <button class="nav-item" data-page="tasks">
+                <span class="nav-icon">☷</span>
+                <span>Tasks</span>
+            </button>
+
+            <button class="nav-item" data-page="pomodoro">
+                <span class="nav-icon">◷</span>
+                <span>Pomodoro</span>
+            </button>
+
+            <button class="nav-item" data-page="stats">
+                <span class="nav-icon">▥</span>
+                <span>Stats</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="profile-avatar">MF</div>
+            <div>
+                <strong>My Workspace</strong>
+                <small>Personal Planner</small>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">YOUR PERSONAL WORKSPACE</p>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p class="page-subtitle" id="pageSubtitle">
+                    Plan your day. Get things done.
+                </p>
+            </div>
+
+            <div class="date-display" id="currentDate">Today</div>
+        </header>
+
+        <!-- DASHBOARD PAGE -->
+        <section class="page-section" id="dashboardPage">
+
+            <div class="welcome-banner">
+                <div>
+                    <p class="welcome-label">A FRESH START</p>
+                    <h2>Make today count.</h2>
+                    <p>Small steps every day lead to big results.</p>
+                </div>
+                <div class="welcome-decoration">✦</div>
+            </div>
+
+            <section class="stats-grid">
+
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Total Tasks</span>
+                        <span class="stat-icon">☷</span>
+                    </div>
+                    <h2 id="totalTasks">0</h2>
+                    <p>All your activities</p>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Pending</span>
+                        <span class="stat-icon">◷</span>
+                    </div>
+                    <h2 id="pendingTasks">0</h2>
+                    <p>Still to be completed</p>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-top">
+                        <span>Completed</span>
+                        <span class="stat-icon">✓</span>
+                    </div>
+                    <h2 id="completedTasks">0</h2>
+                    <p>Tasks finished</p>
+                </article>
+
+            </section>
+
+            <section class="task-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Today's Tasks</h2>
+                        <p>Keep your priorities clear and simple.</p>
+                    </div>
+                    <button class="secondary-button" data-go-page="tasks">
+                        View All Tasks →
+                    </button>
+                </div>
+
+                <form id="taskForm" class="task-form">
+                    <input
+                        type="text"
+                        id="taskInput"
+                        placeholder="What do you need to get done?"
+                        maxlength="150"
+                        required
+                    >
+
+                    <select id="taskPriority" aria-label="Task priority">
+                        <option value="low">Low Priority</option>
+                        <option value="medium" selected>Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+
+                    <button type="submit" id="submitButton">+ Add Task</button>
+                </form>
+
+                <div id="editNotice" class="edit-notice" hidden>
+                    <span>You are editing a task.</span>
+                    <button type="button" id="cancelEdit">Cancel</button>
+                </div>
+
+                <div class="task-list-header">
+                    <span>Your Tasks</span>
+                    <span id="visibleTaskCount">0 tasks</span>
+                </div>
+
+                <div id="taskList" class="task-list"></div>
+
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">✓</div>
+                    <h3>Nothing on your list yet</h3>
+                    <p>Add your first task above and start making progress.</p>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-heading">
+                        <span>Daily Progress</span>
+                        <strong id="progressPercent">0%</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- TASKS PAGE -->
+        <section class="page-section" id="tasksPage" hidden>
+            <section class="task-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Manage Your Tasks</h2>
+                        <p>Add, edit, complete or delete your activities.</p>
+                    </div>
+                </div>
+
+                <div class="filter-buttons">
+                    <button class="filter-button active" data-filter="all">All Tasks</button>
+                    <button class="filter-button" data-filter="pending">Pending</button>
+                    <button class="filter-button" data-filter="completed">Completed</button>
+                </div>
+
+                <div id="tasksPageList" class="task-list"></div>
+
+                <div id="tasksPageEmpty" class="empty-state">
+                    <div class="empty-icon">☷</div>
+                    <h3>No tasks to display</h3>
+                    <p>Add tasks from the Dashboard to see them here.</p>
+                </div>
+            </section>
+        </section>
+
+        <!-- POMODORO PAGE -->
+        <section class="page-section" id="pomodoroPage" hidden>
+            <section class="task-section focus-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Focus Room</h2>
+                        <p>Work with focus. Take breaks. Repeat.</p>
+                    </div>
+                </div>
+
+                <div class="pomodoro-card">
+                    <div class="pomodoro-label" id="timerMode">FOCUS SESSION</div>
+
+                    <div class="timer-circle">
+                        <div class="timer-time" id="timerDisplay">25:00</div>
+                        <p>Stay focused</p>
+                    </div>
+
+                    <div class="timer-buttons">
+                        <button type="button" id="startTimer" class="primary-button">▶ Start</button>
+                        <button type="button" id="pauseTimer" class="secondary-button">Ⅱ Pause</button>
+                        <button type="button" id="resetTimer" class="secondary-button">↻ Reset</button>
+                    </div>
+
+                    <p class="timer-tip">Tip: Focus for 25 minutes, then take a short break.</p>
+                </div>
+
+                <div class="timer-mode-buttons">
+                    <button type="button" class="filter-button active" data-duration="25">Focus · 25 min</button>
+                    <button type="button" class="filter-button" data-duration="5">Short Break · 5 min</button>
+                </div>
+            </section>
+        </section>
+
+        <!-- STATS PAGE -->
+        <section class="page-section" id="statsPage" hidden>
+            <section class="task-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Your Productivity</h2>
+                        <p>See how much you have accomplished.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <article class="stat-card">
+                        <div class="stat-top"><span>Total Tasks</span><span class="stat-icon">☷</span></div>
+                        <h2 id="statsTotal">0</h2>
+                        <p>Tasks added so far</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top"><span>Completed</span><span class="stat-icon">✓</span></div>
+                        <h2 id="statsCompleted">0</h2>
+                        <p>Tasks finished</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top"><span>Completion Rate</span><span class="stat-icon">%</span></div>
+                        <h2 id="statsRate">0%</h2>
+                        <p>Your completion percentage</p>
+                    </article>
+                </div>
+
+                <div class="progress-section stats-progress">
+                    <div class="progress-heading">
+                        <span>Overall Completion</span>
+                        <strong id="statsProgressText">0%</strong>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="statsProgressBar"></div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <footer class="footer">
+            <span>TaskFlow</span>
+            <span>Stay organized. Keep growing. ✦</span>
+        </footer>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
